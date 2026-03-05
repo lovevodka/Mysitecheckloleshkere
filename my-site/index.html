@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Профиль | _ilovevodka</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0c; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+
+        body {
+            background: url('https://i.pinimg.com/736x/7e/1f/76/7e1f76b3f186183ed1736eaebff865a1.jpg') center/cover no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(15, 15, 20, 0.5) 0%, rgba(5, 5, 8, 0.85) 100%);
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            padding: 80px 20px 100px 20px; /* Увеличил верхний отступ из-за короны */
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @keyframes smoothFadeUp {
+            0% { opacity: 0; transform: translateY(40px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes textShine {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* Анимация для парящей короны */
+        @keyframes floatCrown {
+            0% { transform: translate(-50%, 0) rotate(-3deg); }
+            50% { transform: translate(-50%, -10px) rotate(3deg); }
+            100% { transform: translate(-50%, 0) rotate(-3deg); }
+        }
+
+        .card {
+            width: 100%;
+            background: rgba(20, 20, 25, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0;
+            animation: smoothFadeUp 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- ВЕРХНЯЯ КАРТОЧКА --- */
+        .profile-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation-delay: 0.1s;
+        }
+
+        .avatar-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        /* КОРОНА */
+        .crown-icon {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            font-size: 38px;
+            color: #ffffff;
+            /* Свечение короны */
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4);
+            z-index: 10;
+            animation: floatCrown 3s ease-in-out infinite;
+            pointer-events: none; /* Чтобы не мешала наведению на аватар */
+        }
+
+        .avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(40, 40, 45, 0.8);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .card:hover .avatar {
+            transform: scale(1.05);
+        }
+
+        .status-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background-color: #10b981;
+            border: 4px solid #1a1a1f;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #10b981;
+            animation: pulse 2.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .name-role {
+            text-align: center;
+            width: 100%;
+        }
+
+        .name-role h1 {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #ffffff 20%, #7a7a7a 50%, #ffffff 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShine 4s linear infinite;
+        }
+
+        .direct-contacts {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .contact-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #d4d4d8;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .contact-tag:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .contact-tag.tg:hover i { color: #0088cc; }
+        .contact-tag.ds:hover i { color: #5865F2; }
+
+        .role-text {
+            font-size: 15px;
+            color: #a1a1aa;
+            margin-bottom: 30px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 15%;
+            height: 70%;
+            width: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .stat-item h3 {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .stat-item p {
+            font-size: 12px;
+            color: #71717a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        /* --- СРЕДНЯЯ КАРТОЧКА (Стек) --- */
+        .info-card {
+            animation-delay: 0.3s;
+        }
+
+        .info-card h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 35px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #ffffff;
+        }
+
+        .info-card h2::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.15), transparent);
+        }
+
+        .section-title {
+            font-size: 13px;
+            color: #8a8a93;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: smoothFadeUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .badges-container:nth-of-type(2) .badge:nth-child(1) { animation-delay: 0.4s; }
+        .badges-container:nth-of-type(2) .badge:nth-child(2) { animation-delay: 0.5s; }
+        .badges-container:nth-of-type(2) .badge:nth-child(3) { animation-delay: 0.6s; }
+        .badges-container:nth-of-type(4) .badge:nth-child(1) { animation-delay: 0.6s; }
+        .badges-container:nth-of-type(4) .badge:nth-child(2) { animation-delay: 0.7s; }
+        .badges-container:nth-of-type(6) .badge:nth-child(1) { animation-delay: 0.8s; }
+        .badges-container:nth-of-type(6) .badge:nth-child(2) { animation-delay: 0.9s; }
+
+        .badge i, .badge span { z-index: 2; }
+
+        .badge::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: currentColor;
+            opacity: 0.08;
+            z-index: 1;
+            transition: opacity 0.4s ease;
+        }
+
+        .badge:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.4);
+        }
+
+        .badge:hover::before { opacity: 0.15; }
+
+        .badge.sql { color: #4da8da; border: 1px solid rgba(77, 168, 218, 0.2); }
+        .badge.sql:hover { box-shadow: 0 0 20px rgba(77, 168, 218, 0.3); }
+        .badge.mongo { color: #4db33d; border: 1px solid rgba(77, 179, 61, 0.2); }
+        .badge.mongo:hover { box-shadow: 0 0 20px rgba(77, 179, 61, 0.3); }
+        .badge.redis { color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.2); }
+        .badge.redis:hover { box-shadow: 0 0 20px rgba(255, 77, 77, 0.3); }
+        .badge.python { color: #ffe873; border: 1px solid rgba(255, 232, 115, 0.2); }
+        .badge.python:hover { box-shadow: 0 0 20px rgba(255, 232, 115, 0.3); }
+        .badge.node { color: #8cc84b; border: 1px solid rgba(140, 200, 75, 0.2); }
+        .badge.node:hover { box-shadow: 0 0 20px rgba(140, 200, 75, 0.3); }
+        .badge.windows { color: #00bfff; border: 1px solid rgba(0, 120, 212, 0.2); }
+        .badge.windows:hover { box-shadow: 0 0 20px rgba(0, 120, 212, 0.3); }
+        .badge.webrat { color: #d8b4fe; border: 1px solid rgba(147, 51, 234, 0.2); }
+        .badge.webrat:hover { box-shadow: 0 0 20px rgba(147, 51, 234, 0.3); }
+
+        .scroll-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: -20px;
+            margin-bottom: -10px;
+            animation: fadeInOut 2s infinite;
+        }
+
+        .scroll-indicator i { font-size: 20px; }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 0.8; transform: translateY(5px); }
+        }
+
+        /* --- НИЖНЯЯ КАРТОЧКА (Цитата) --- */
+        .quote-card {
+            text-align: center;
+            padding: 35px 40px;
+            animation-delay: 0.5s; /* Появляется последней */
+            position: relative;
+            background: rgba(15, 15, 18, 0.7); /* Чуть темнее остальных */
+        }
+
+        .quote-icon {
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .quote-text {
+            font-size: 15px;
+            font-style: italic;
+            line-height: 1.8;
+            color: #d4d4d8;
+            font-weight: 500;
+        }
+
+        .quote-text p {
+            margin-bottom: 6px;
+        }
+        
+        .quote-text p:last-child {
+            margin-bottom: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="overlay"></div>
+
+    <div class="container">
+        
+        <div class="card profile-card">
+            <div class="avatar-container">
+                <i class="fas fa-crown crown-icon"></i>
+                <img src="https://i.pinimg.com/736x/fb/2e/ef/fb2eef02bd608642184f6f0c25ca9a70.jpg" alt="Avatar" class="avatar">
+                <div class="status-badge"></div>
+            </div>
+            
+            <div class="name-role">
+                <h1>_ilovevodka</h1>
+                
+                <div class="direct-contacts">
+                    <a href="https://t.me/ilovecodka" target="_blank" style="text-decoration: none;">
+                        <div class="contact-tag tg">
+                            <i class="fab fa-telegram-plane"></i>
+                            <span>ilovecodka</span>
+                        </div>
+                    </a>
+                    <div class="contact-tag ds">
+                        <i class="fab fa-discord"></i>
+                        <span>_ilovevodka</span>
+                    </div>
+                </div>
+
+                <div class="role-text">>_ Developer: 2y | Selling Databases</div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <h3>2y</h3>
+                    <p>Dev Exp</p>
+                </div>
+                <div class="stat-item">
+                    <h3>50+</h3>
+                    <p>DBs Sold</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>Online</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+
+        <div class="card info-card">
+            <h2>Stack & Arsenal</h2>
+
+            <div class="section-title">Database Solutions</div>
+            <div class="badges-container">
+                <div class="badge sql"><i class="fas fa-database"></i><span>MySQL / Postgres</span></div>
+                <div class="badge mongo"><i class="fas fa-leaf"></i><span>MongoDB</span></div>
+                <div class="badge redis"><i class="fas fa-server"></i><span>Redis</span></div>
+            </div>
+
+            <div class="section-title">Core Languages</div>
+            <div class="badges-container">
+                <div class="badge python"><i class="fab fa-python"></i><span>Python</span></div>
+                <div class="badge node"><i class="fab fa-node-js"></i><span>Node.JS</span></div>
+            </div>
+
+            <div class="section-title">Environment & Tools</div>
+            <div class="badges-container">
+                <div class="badge windows"><i class="fab fa-windows"></i><span>Windows</span></div>
+                <div class="badge webrat"><i class="fas fa-bug"></i><span>WebRat</span></div>
+            </div>
+        </div>
+
+        <div class="card quote-card">
+            <i class="fas fa-quote-right quote-icon"></i>
+            <div class="quote-text">
+                <p>Хуёво, когда твою тёлку забирает с клуба мажик</p>
+                <p>И это, блядь, не тот рассказ, который меня мажет</p>
+                <p>Походу, просто в моде сейчас блядская натура</p>
+                <p>Ну девочка, остановись, куда ты лезешь, дура?</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
